@@ -10,7 +10,7 @@ resources:
       type: github
       name: builttoroam/pipeline_templates
       ref: refs/tags/v0.7.0
-      endpoint: Pipeline-Templates
+      endpoint: github
 
 pool:
   vmImage: 'windows-latest'
