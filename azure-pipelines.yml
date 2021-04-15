@@ -50,14 +50,4 @@ stages:
         artifactName: 'BicepArtifacts' 
         publishLocation: Container
 
-- template:  templates/deploy-arm.yml
-  parameters:
-    stage_name: 'Deploy_Development'
-    depends_on: 'Compile_Bicep'
-    deploy_environment: 'Development'
 
-- template:  templates/deploy-arm.yml
-  parameters:
-    stage_name: 'Deploy_Testing'
-    depends_on: 'Deploy_Development'
-    deploy_environment: 'Testing'
