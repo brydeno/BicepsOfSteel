@@ -1,0 +1,59 @@
+trigger:
+  branches:
+    include:
+      - master
+
+
+resources:
+  repositories:
+    - repository: pipelinetemplates
+      type: github
+      name: builttoroam/pipeline_templates
+      ref: refs/tags/v0.7.0
+      endpoint: Pipeline-Templates
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  - name: bicep_filepath
+    value: 'SimpleWithManagedIdentities/VanillaDeployment.bicep'
+  - name: arm_template_filepath
+    value: '$(Pipeline.Workspace)/BicepArtifacts/services.json'
+
+stages:
+- stage: Compile_Bicep
+  pool: vmImage: 'windows-latest'
+
+  jobs:
+  - job: Bicep
+    steps:
+    - template: azure/steps/bicep/bicep.yml@pipelinetemplates
+        parameters:
+          name: Bicep
+          bicep_file_path: '$(System.DefaultWorkingDirectory)/$(bicep_filepath)'
+          arm_path_variable: ArmFilePath
+
+    steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      displayName: ARM Template deployment to dev environment
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'AuctionPlatform-Dev'
+        subscriptionId: '3d2975d2-5f9f-4050-b077-81ebde5fe170'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'auctionplatform-rg-dev'
+        location: 'Australia East'
+        templateLocation: 'Linked artifact'
+        csmFile: 'devops/IaC/Infrastructure/infrastructure.json'
+        csmParametersFile: 'devops/IaC/Infrastructure/infrastructure.parameters.dev.json'
+        deploymentMode: 'Incremental'
+
+    - task: AzureCLI@2
+      displayName: Enable static site hosting in $(storageAccountName)
+      inputs:
+        azureSubscription: 'AuctionPlatform-Dev'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az storage blob service-properties update --account-name $(storageAccountName) --static-website --404-document index.html --index-document index.html

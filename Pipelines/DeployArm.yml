@@ -1,0 +1,63 @@
+parameters:
+- name: stage_name
+  type: string
+  default: 'Deploy_ARM_Resources'
+
+- name: depends_on
+  type: string
+  default: ''
+
+  # deploy_environment - Environment code
+- name: deploy_environment
+  type: string
+
+stages:
+- stage: ${{ parameters.stage_name }}
+  dependsOn: ${{ parameters.depends_on }}
+  variables:
+  - group: 'Common.${{ parameters.deploy_environment }}'
+  
+  pool:
+    vmImage: 'windows-latest'
+
+  jobs:
+  - deployment: 'Deploy${{ parameters.stage_name }}'
+    displayName: 'Deploy ARM Resources to ${{ parameters.deploy_environment }}' 
+    environment: ${{ parameters.deploy_environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: PowerShell@2
+            name: ${{ parameters.stage_name }}
+            inputs:
+              targetType: 'inline'
+              workingDirectory: $(Pipeline.Workspace)
+              script: |
+                  $envParam = '${{ parameters.deploy_environment }}'
+                  Write-Host "Deployment deploy environment parameter: $envParam"
+
+                  $envName = '$(EnvironmentName)'
+                  Write-Host "Deployment environment name variable: $envName"
+
+          - task: AzureCLI@2
+            displayName: 'Create resource group - $(ResourceGroupName)'
+            inputs:
+              azureSubscription: $(AzureSubscriptionConnectionName)
+              scriptType: ps
+              scriptLocation: inlineScript
+              inlineScript: |
+                Write-Host "Creating RG: $(ResourceGroupName)"
+                az group create -n $(ResourceGroupName) -l $(ResourceGroupLocation)
+                Write-Host "Created RG: $(ResourceGroupName)"
+
+          - task: AzureResourceGroupDeployment@2
+            displayName: 'Deploying ARM template to $(ResourceGroupName)'
+            inputs:
+              azureSubscription: $(AzureSubscriptionConnectionName)
+              action: 'Create Or Update Resource Group' 
+              resourceGroupName: $(ResourceGroupName)
+              location: $(ResourceGroupLocation) 
+              templateLocation: 'Linked artifact'
+              csmFile: '$(arm_template_filepath)' # Required when  TemplateLocation == Linked Artifact        
+              overrideParameters: '-location $(ResourceGroupLocation) -env $(EnvironmentCode) -applicationName $(application_name)'
