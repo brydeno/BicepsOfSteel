@@ -1,0 +1,53 @@
+trigger:
+  branches:
+    include:
+      - master
+
+
+resources:
+  repositories:
+    - repository: pipelinetemplates
+      type: github
+      name: builttoroam/pipeline_templates
+      ref: refs/tags/v0.7.0
+      endpoint: github
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  - name: bicep_filepath
+    value: 'SimpleWithManagedIdentities/VanillaDeployment.bicep'
+  - name: arm_template_filepath
+    value: '$(Pipeline.Workspace)/BicepArtifacts/services.json'
+
+stages:
+- stage: Compile_Bicep
+  pool:
+    vmImage: 'windows-latest'
+
+  jobs:
+  - job: Bicep
+    steps:
+    - template: azure/steps/bicep/bicep.yml@pipelinetemplates
+      parameters:
+        name: Bicep
+        bicep_file_path: '$(System.DefaultWorkingDirectory)/$(bicep_filepath)'
+        arm_path_variable: ArmFilePath
+
+    - task: CopyFiles@2
+      displayName: 'Copying bicep file to artifacts folder'
+      inputs:
+        contents: '$(Bicep.ArmFilePath)'
+        targetFolder: '$(build.artifactStagingDirectory)'
+        flattenFolders: true
+        overWrite: true
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish artifacts'
+      inputs:
+        pathtoPublish: '$(build.artifactStagingDirectory)' 
+        artifactName: 'BicepArtifacts' 
+        publishLocation: Container
+
+
