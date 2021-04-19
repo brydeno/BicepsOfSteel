@@ -82,6 +82,7 @@ resource farm 'Microsoft.Web/serverFarms@2020-06-01' = {
 resource website 'Microsoft.Web/sites@2020-06-01' = {
   name: websiteName
   location: location
+  identity: msi
   properties: {
     serverFarmId: farm.id
     siteConfig: {
