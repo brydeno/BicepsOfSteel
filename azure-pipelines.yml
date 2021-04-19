@@ -55,5 +55,5 @@ stages:
         resourceGroupName: 'testing'
         location: 'Australia East'
         templateLocation: 'Linked artifact'
-        csmFile: 'ArmFile'
+        csmFile: '$(Bicep.ArmFilePath)'
         deploymentMode: 'Incremental'
