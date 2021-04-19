@@ -21,11 +21,6 @@ variables:
   - name: arm_template_filepath
     value: '$(Pipeline.Workspace)/BicepArtifacts/services.json'
 
-parameters:
-  - name: subscription_id
-  - name: resource_group
-  - name: location
-
 stages:
 - stage: Compile_Bicep
   pool:
