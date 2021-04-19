@@ -3,15 +3,6 @@ trigger:
     include:
       - master
 
-
-resources:
-  repositories:
-    - repository: pipelinetemplates
-      type: github
-      name: builttoroam/pipeline_templates
-      ref: refs/tags/v0.7.0
-      endpoint: github
-
 pool:
   vmImage: 'windows-latest'
 
