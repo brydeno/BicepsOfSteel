@@ -35,17 +35,6 @@ stages:
         bicep_file_path: '$(System.DefaultWorkingDirectory)/$(bicep_filepath)'
         arm_path_variable: ArmFilePath
 
-    - task: CopyFiles@2
-      displayName: 'Copying bicep file to artifacts folder'
-      inputs:
-        contents: '$(Bicep.ArmFilePath)'
-        targetFolder: '$(build.artifactStagingDirectory)'
-        flattenFolders: true
-        overWrite: true
- 
-    - publish: '$(Bicep.ArmFilePath)'
-      artifact: ArmFile
-
     - task: AzureResourceManagerTemplateDeployment@3
       inputs:
         deploymentScope: 'Resource Group'
