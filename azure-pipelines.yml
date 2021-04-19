@@ -24,25 +24,27 @@ variables:
 stages:
 - stage: Compile_Bicep
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'ubuntu-latest'
 
   jobs:
   - job: Bicep
     steps:
-    - template: azure/steps/bicep/bicep.yml@pipelinetemplates
-      parameters:
-        name: Bicep
-        bicep_file_path: '$(System.DefaultWorkingDirectory)/$(bicep_filepath)'
-        arm_path_variable: ArmFilePath
+      - task: AzureCLI@2
+        displayName: Build ARM Template from bicep file
+        inputs:
+          azureSubscription: 'Azure'
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            az --version
+            az bicep build --files SimpleWithManagedIdentities/VanillaDeployment.bicep
 
-    - task: AzureResourceManagerTemplateDeployment@3
-      inputs:
-        deploymentScope: 'Resource Group'
-        azureResourceManagerConnection: 'Azure'
-        subscriptionId: '92dba6c6-2cf8-46ad-9d75-8674f0f66b9a'
-        action: 'Create Or Update Resource Group'
-        resourceGroupName: 'testing'
-        location: 'Australia East'
-        templateLocation: 'Linked artifact'
-        csmFile: '$(Bicep.ArmFilePath)'
-        deploymentMode: 'Incremental'
+      - task: AzureResourceManagerTemplateDeployment@3
+        displayName: 'Validate APIM Templates'
+        inputs:
+          azureResourceManagerConnection: 'Azure'
+          subscriptionId: '92dba6c6-2cf8-46ad-9d75-8674f0f66b9a'
+          resourceGroupName: 'testing'
+          location: 'Australia East'
+          csmFile: SimpleWithManagedIdentities/VanillaDeployment.json
+          deploymentMode: 'Incremental'
