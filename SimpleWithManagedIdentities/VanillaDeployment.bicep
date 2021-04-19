@@ -31,8 +31,8 @@ param containerName string = 'Items'
 param identityName string = 'ManageIdentityName'
 
 
-param serviceBusNamespaceName string ='servicebus'
-param serviceBusQueueName string = 'servicebusqueue'
+param serviceBusNamespaceName string ='servicebus17645'
+param serviceBusQueueName string = 'servicebusqueue48353'
 
 param eventHubSku string = 'Standard'
 
