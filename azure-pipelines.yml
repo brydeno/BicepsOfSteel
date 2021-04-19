@@ -21,6 +21,11 @@ variables:
   - name: arm_template_filepath
     value: '$(Pipeline.Workspace)/BicepArtifacts/services.json'
 
+parameters:
+  - name: subscription_id
+  - name: resource_group
+  - name: location
+
 stages:
 - stage: Compile_Bicep
   pool:
@@ -42,12 +47,18 @@ stages:
         targetFolder: '$(build.artifactStagingDirectory)'
         flattenFolders: true
         overWrite: true
+ 
+    - publish: '$(Bicep.ArmFilePath)'
+      artifact: ArmFile
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish artifacts'
+    - task: AzureResourceManagerTemplateDeployment@3
       inputs:
-        pathtoPublish: '$(build.artifactStagingDirectory)' 
-        artifactName: 'BicepArtifacts' 
-        publishLocation: Container
-
-
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'Azure'
+        subscriptionId: '92dba6c6-2cf8-46ad-9d75-8674f0f66b9a'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'testing'
+        location: 'Australia East'
+        templateLocation: 'Linked artifact'
+        csmFile: 'ArmFile'
+        deploymentMode: 'Incremental'
