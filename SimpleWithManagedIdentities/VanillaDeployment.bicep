@@ -36,7 +36,7 @@ param serviceBusQueueName string = 'servicebusqueue48353'
 
 param eventHubSku string = 'Standard'
 
-var eventHubNamespaceName = 'eventhubns'
+var eventHubNamespaceName = 'eventhubns54365'
 var eventHubName = 'eventhub'
 
 
