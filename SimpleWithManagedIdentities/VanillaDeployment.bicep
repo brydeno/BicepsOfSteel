@@ -84,7 +84,9 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
   location: location
   identity:{
     type: 'UserAssigned'
-    userAssignedIdentities: msi
+    userAssignedIdentities: {
+      '${msi.id}' : {}
+    }
   }
   properties: {
     serverFarmId: farm.id
