@@ -29,7 +29,7 @@ stages:
           scriptLocation: inlineScript
           inlineScript: |
             az --version
-            az bicep build --files SimpleWithManagedIdentities/VanillaDeployment.bicep
+            az bicep build --file SimpleWithManagedIdentities/VanillaDeployment.bicep
 
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: 'Deploy ARM Templates'
