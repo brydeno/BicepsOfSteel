@@ -45,6 +45,8 @@ stages:
           deploymentMode: Incremental
           
   - job: AzureFunction
+    dependsOn: 
+    - Bicep
     steps:      
       - task: DotNetCoreCLI@2
         displayName: build
