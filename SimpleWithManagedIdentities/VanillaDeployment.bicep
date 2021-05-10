@@ -1,5 +1,5 @@
 @maxLength(30)
-param applicationName string = 'to-do-app${uniqueString(resourceGroup().id)}'
+param applicationName string = 'identitydemo-${uniqueString(resourceGroup().id)}'
 
 param location string = resourceGroup().location
 
@@ -28,7 +28,7 @@ param branch string = 'master'
 
 param databaseName string = 'Tasks'
 param containerName string = 'Items'
-param identityName string = 'ManageIdentityName'
+param identityName string = 'ManageIdentity'
 
 
 param serviceBusNamespaceName string ='servicebus17645'
@@ -169,9 +169,6 @@ resource eventHub 'Microsoft.EventHub/namespaces/eventhubs@2017-04-01' = {
     partitionCount: 1
   }
 }
-
-
-
 
 // Create our managed identity
 resource msi 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
