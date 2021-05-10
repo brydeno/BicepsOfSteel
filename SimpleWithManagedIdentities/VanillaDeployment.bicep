@@ -60,6 +60,9 @@ resource appinsights 'Microsoft.Insights/components@2020-02-02-preview' ={
   name: '${websiteName}-ai'
   location: location
   kind: 'web'
+  properties: {
+    'Application_Type': 'web'   
+  }
 }
 
 resource website 'Microsoft.Web/sites@2020-06-01' = {
