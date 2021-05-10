@@ -3,8 +3,8 @@ trigger:
     include:
       - main
 
-pool:
-  name: mine
+#pool:
+#  name: mine
 #  vmImage: 'windows-latest'
 
 variables:
@@ -15,8 +15,8 @@ variables:
 
 stages:
 - stage: Compile_Bicep
-  pool:
-    vmImage: 'ubuntu-latest'
+#  pool:
+#    vmImage: 'ubuntu-latest'
 
   jobs:
   - job: Bicep
