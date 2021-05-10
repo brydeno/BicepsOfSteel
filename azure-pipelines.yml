@@ -19,8 +19,6 @@ variables:
 
 stages:
 - stage: Compile_Bicep
-#  pool:
-#    vmImage: 'ubuntu-latest'
 
   jobs:
   - job: Bicep
@@ -62,7 +60,7 @@ stages:
           archiveFile: $(Build.ArtifactStagingDirectory)/api.${{parameters.BuildId}}.zip
           replaceExistingArchive: true
 
-      -task: AzureFunctionApp@1
+      - task: AzureFunctionApp@1
         displayName: 'Azure functions App deploy'
         inputs:
           azureSubscription: '${{variables.subscription_name}}'
