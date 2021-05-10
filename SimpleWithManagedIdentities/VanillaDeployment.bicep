@@ -168,12 +168,6 @@ resource eventHub 'Microsoft.EventHub/namespaces/eventhubs@2017-04-01' = {
   }
 }
 
-// Create our managed identity
-resource msi 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
-  name: identityName 
-  location: location
-}
-
 // Give the managed identity contributor role to Cosmos
 resource cosmosRole 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
   name: guid(contributorRoleId, cosmos.id)
@@ -181,7 +175,7 @@ resource cosmosRole 'Microsoft.Authorization/roleAssignments@2020-04-01-preview'
   properties: {
     principalType: 'ServicePrincipal'
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', contributorRoleId)
-    principalId: msi.properties.principalId
+    principalId: website.identity.principalId
   }
 }
 
@@ -193,7 +187,7 @@ resource eventHubRole 'Microsoft.Authorization/roleAssignments@2020-04-01-previe
 
    // principalType: 'ServicePrincipal'
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', readerRoleId)
-    principalId: msi.properties.principalId
+    principalId: website.identity.principalId
   }
 }
 
