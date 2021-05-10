@@ -83,10 +83,7 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
   name: websiteName
   location: location
   identity:{
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${msi.id}' : {}
-    }
+    type: 'SystemAssigned'
   }
   properties: {
     serverFarmId: farm.id
@@ -112,6 +109,7 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
     }
   }
 }
+
 
 resource srcCtrl 'Microsoft.Web/sites/sourcecontrols@2020-06-01' = {
   name: '${website.name}/web'
@@ -206,6 +204,6 @@ resource serviceBusRole 'Microsoft.Authorization/roleAssignments@2020-04-01-prev
   properties: {
     principalType: 'ServicePrincipal'
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', contributorRoleId)
-    principalId: msi.properties.principalId
+    principalId: website.identity.principalId
   }
 }
