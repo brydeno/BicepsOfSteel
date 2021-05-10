@@ -3,8 +3,6 @@ param applicationName string = 'identitydemo-${uniqueString(resourceGroup().id)}
 
 param location string = resourceGroup().location
 
-param appServicePlanInstances int = 1
-
 param databaseName string = 'Tasks'
 param containerName string = 'Items'
 
