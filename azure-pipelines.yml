@@ -3,8 +3,8 @@ trigger:
     include:
       - main
 
-#pool:
-#  name: mine
+pool:
+  name: Mine
 #  vmImage: 'windows-latest'
 
 variables:
