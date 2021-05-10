@@ -3,8 +3,8 @@ trigger:
     include:
       - main
 
-pool:
-  vmImage: 'windows-latest'
+#pool:
+#  vmImage: 'windows-latest'
 
 variables:
   - name: bicep_filepath
