@@ -16,8 +16,10 @@ param eventHubSku string = 'Standard'
 var eventHubNamespaceName = 'eventhubns54365'
 var eventHubName = 'eventhub'
 var storageAccountName = 'stor54365'
+var storageQueueName = 'jobs'
 
-
+// All the various AD role id's we'll be using
+var storageaccountdatacontributorRoleId = '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
 var readerRoleId = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
 var contributorRoleId = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
 
@@ -74,6 +76,10 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
   }
 }
 
+resource storageQueue 'Microsoft.Storage/storageAccounts/queueServices/queues@2021-02-01' ={
+  name: '${storageAccount.name}/default/${storageQueueName}'
+}
+
 resource website 'Microsoft.Web/sites@2020-06-01' = {
   name: websiteName
   location: location
@@ -105,6 +111,14 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
           value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
+        }
+        {
+          name: 'Queue:Address'
+          value: 'https://${storageAccount.name}.queue.core.windows.net'
+        }
+        {
+          name: 'Queue:Name'
+          value: storageQueueName
         }
         {
           name: 'CosmosDb:Account'
@@ -203,4 +217,14 @@ resource serviceBusRole 'Microsoft.Authorization/roleAssignments@2020-04-01-prev
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', contributorRoleId)
     principalId: website.identity.principalId
   }
+}
+
+resource storageQueueRole 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(storageaccountdatacontributorRoleId, storageQueue.id)
+  scope: storageQueue
+  properties: {
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', storageaccountdatacontributorRoleId)
+    principalId: website.identity.principalId
+  }  
 }
