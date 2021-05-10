@@ -3,24 +3,6 @@ param applicationName string = 'identitydemo-${uniqueString(resourceGroup().id)}
 
 param location string = resourceGroup().location
 
-@allowed([
-  'F1'
-  'D1'
-  'B1'
-  'B2'
-  'B3'
-  'S1'
-  'S2'
-  'S3'
-  'P1'
-  'P2'
-  'P3'
-  'P4'
-])
-param appServicePlanTier string = 'F1'
-
-@minValue(1)
-@maxValue(3)
 param appServicePlanInstances int = 1
 
 param databaseName string = 'Tasks'
@@ -68,10 +50,16 @@ resource farm 'Microsoft.Web/serverFarms@2020-06-01' = {
   name: hostingPlanName
   location: location
   sku: {
-    name: appServicePlanTier
-    capacity: appServicePlanInstances
+    name: 'Y1'
+    tier: 'Dynamic'
   }
   properties: {}
+}
+
+resource appinsights 'Microsoft.Insights/components@2020-02-02-preview' ={
+  name: '${websiteName}-ai'
+  location: location
+  kind: 'web'
 }
 
 resource website 'Microsoft.Web/sites@2020-06-01' = {
@@ -80,17 +68,18 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
   identity:{
     type: 'SystemAssigned'
   }
+  kind: 'functionapp'
   properties: {
     serverFarmId: farm.id
     siteConfig: {
       appSettings: [
         {
-          name: 'CosmosDb:Account'
-          value: cosmos.properties.documentEndpoint
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: appinsights.properties.InstrumentationKey
         }
         {
-          name: 'CosmosDb:Key'
-          value: listKeys(cosmos.id, cosmos.apiVersion).primaryMasterKey
+          name: 'CosmosDb:Account'
+          value: cosmos.properties.documentEndpoint
         }
         {
           name: 'CosmosDb:DatabaseName'
