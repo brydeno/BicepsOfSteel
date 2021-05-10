@@ -18,7 +18,7 @@ variables:
     value: 'identitydemo-123654'
 
 stages:
-- stage: Compile_Bicep
+- stage: Build
 #  pool:
 #    vmImage: 'ubuntu-latest'
 
@@ -45,7 +45,9 @@ stages:
           csmFile: SimpleWithManagedIdentities/VanillaDeployment.json
           csmParametersFile: SimpleWithManagedIdentities/VanillaDeploymentParameters.json
           deploymentMode: Incremental
-      
+          
+    - job: Bicep
+      steps:      
       - task: DotNetCoreCLI@2
         displayName: build
         inputs:
@@ -59,7 +61,7 @@ stages:
           rootFolderOrFile: '$(System.DefaultWorkingDirectory)/published_backend'
           includeRootFolder: false
           archiveType: zip
-          archiveFile: $(Build.ArtifactStagingDirectory)/api.${{parameters.BuildId}}.zip
+          archiveFile: $(Build.ArtifactStagingDirectory)/api.${{Build.BuildId}}.zip
           replaceExistingArchive: true
 
       -task: AzureFunctionApp@1
@@ -68,6 +70,6 @@ stages:
           azureSubscription: '${{variables.subscription_name}}'
           appType: 'functionApp'
           appName: '${{variables.app_name}}'
-          package: $(Build.ArtifactStagingDirectory)/api.${{parameters.BuildId}}.zip 
+          package: $(Build.ArtifactStagingDirectory)/api.${{Build.BuildId}}.zip 
           deploymentMethod: 'runFromPackage'
 
