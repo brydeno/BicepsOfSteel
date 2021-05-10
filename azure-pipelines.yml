@@ -59,7 +59,7 @@ stages:
           rootFolderOrFile: '$(System.DefaultWorkingDirectory)/published_backend'
           includeRootFolder: false
           archiveType: zip
-          archiveFile: $(Build.ArtifactStagingDirectory)/api.${{Build.BuildId}}.zip
+          archiveFile: $(Build.ArtifactStagingDirectory)/api.${{AzureFunction.BuildId}}.zip
           replaceExistingArchive: true
 
       - task: AzureFunctionApp@1
@@ -68,6 +68,6 @@ stages:
           azureSubscription: '${{variables.subscription_name}}'
           appType: 'functionApp'
           appName: '${{variables.app_name}}'
-          package: $(Build.ArtifactStagingDirectory)/api.${{Build.BuildId}}.zip 
+          package: $(Build.ArtifactStagingDirectory)/api.${{AzureFunction.BuildId}}.zip 
           deploymentMethod: 'runFromPackage'
 
