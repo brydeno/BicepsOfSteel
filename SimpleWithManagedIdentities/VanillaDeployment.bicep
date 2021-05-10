@@ -1,5 +1,6 @@
 @maxLength(30)
 param applicationName string = 'identitydemo-${uniqueString(resourceGroup().id)}'
+param featureFlagAddress string
 
 param location string = resourceGroup().location
 
@@ -111,7 +112,11 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
           value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
         }
         {
-          name: 'Queue:Address'
+          name: 'Queue:Address__serviceUri'
+          value: 'https://${storageAccount.name}.queue.core.windows.net'
+        }
+        {
+          name: 'Queue:Uri'
           value: 'https://${storageAccount.name}.queue.core.windows.net'
         }
         {
@@ -129,6 +134,10 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
         {
           name: 'CosmosDb:ContainerName'
           value: containerName
+        }
+        {
+          name: 'FeatureFlagAddress'
+          value: featureFlagAddress
         }
       ]
     }
@@ -217,6 +226,7 @@ resource serviceBusRole 'Microsoft.Authorization/roleAssignments@2020-04-01-prev
   }
 }
 
+//Give the managed identity the data contributor role to the relevant storage queue
 resource storageQueueRole 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
   name: guid(storageaccountdatacontributorRoleId, storageQueue.id)
   scope: storageQueue

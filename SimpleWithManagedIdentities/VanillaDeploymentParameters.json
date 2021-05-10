@@ -4,6 +4,9 @@
     "parameters": {
         "applicationName": {
             "value": "identitydemo-123654"
+        },
+        "FeatureFlagAddress":{
+            "value": "https://loadtestingfeatureflags.azconfig.io"
         }
-    }
+   }
 }

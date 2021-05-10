@@ -25,7 +25,7 @@ namespace AzureIdentityDemo
 		{
 			// Connects to a storage queue client. Address looks like https://identitydemo.queue.core.windows.net
 			// The queuename is just a valid queue name.
-			_client = new QueueClient(new Uri($"{configuration["Queue:Address"]}/{configuration["Queue:QueueName"]}"),
+			_client = new QueueClient(new Uri($"{configuration["Queue:Uri"]}/{configuration["Queue:Name"]}"),
 									  new DefaultAzureCredential(),
 									  new QueueClientOptions()
 									  {
