@@ -44,8 +44,8 @@ stages:
           csmParametersFile: SimpleWithManagedIdentities/VanillaDeploymentParameters.json
           deploymentMode: Incremental
           
-    - job: Bicep
-      steps:      
+  - job: AzureFunction
+    steps:      
       - task: DotNetCoreCLI@2
         displayName: build
         inputs:
