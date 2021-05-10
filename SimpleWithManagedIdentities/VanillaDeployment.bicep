@@ -15,7 +15,7 @@ param eventHubSku string = 'Standard'
 
 var eventHubNamespaceName = 'eventhubns54365'
 var eventHubName = 'eventhub'
-
+var storageAccountName = 'stor54365'
 
 
 var readerRoleId = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
@@ -53,7 +53,6 @@ resource farm 'Microsoft.Web/serverFarms@2020-06-01' = {
     name: 'Y1'
     tier: 'Dynamic'
   }
-  properties: {}
 }
 
 resource appinsights 'Microsoft.Insights/components@2020-02-02-preview' ={
@@ -62,6 +61,16 @@ resource appinsights 'Microsoft.Insights/components@2020-02-02-preview' ={
   kind: 'web'
   properties: {
     'Application_Type': 'web'   
+  }
+}
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
+  name: storageAccountName
+  location: location
+  kind: 'StorageV2'
+  sku: {
+    name: 'Standard_LRS'
+    tier: 'Standard'
   }
 }
 
@@ -74,11 +83,28 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
   kind: 'functionapp'
   properties: {
     serverFarmId: farm.id
+    httpsOnly: true
     siteConfig: {
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
           value: appinsights.properties.InstrumentationKey
+        }
+        {
+          name: 'AzureWebJobsStorage'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
+        }
+        {
+          'name': 'FUNCTIONS_EXTENSION_VERSION'
+          'value': '~3'
+        }
+        {
+          'name': 'FUNCTIONS_WORKER_RUNTIME'
+          'value': 'dotnet'
+        }
+        {
+          name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageAccount.id, storageAccount.apiVersion).keys[0].value}'
         }
         {
           name: 'CosmosDb:Account'
