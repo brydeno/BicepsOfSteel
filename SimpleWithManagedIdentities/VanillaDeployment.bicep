@@ -23,13 +23,8 @@ param appServicePlanTier string = 'F1'
 @maxValue(3)
 param appServicePlanInstances int = 1
 
-param repositoryUrl string = 'https://github.com/Azure-Samples/cosmos-dotnet-core-todo-app.git'
-param branch string = 'master'
-
 param databaseName string = 'Tasks'
 param containerName string = 'Items'
-param identityName string = 'ManageIdentity'
-
 
 param serviceBusNamespaceName string ='servicebus17645'
 param serviceBusQueueName string = 'servicebusqueue48353'
@@ -107,16 +102,6 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
         }
       ]
     }
-  }
-}
-
-
-resource srcCtrl 'Microsoft.Web/sites/sourcecontrols@2020-06-01' = {
-  name: '${website.name}/web'
-  properties: {
-    repoUrl: repositoryUrl
-    branch: branch
-    isManualIntegration: true
   }
 }
 
