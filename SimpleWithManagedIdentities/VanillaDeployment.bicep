@@ -59,6 +59,11 @@ resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/container
   properties:{
     resource: {
       id: 'democontainer'
+      partitionKey: {
+        paths: [
+          '/partitionKey'
+        ]
+      }
     }
   }
 }
