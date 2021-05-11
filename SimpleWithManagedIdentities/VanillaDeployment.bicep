@@ -160,7 +160,7 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
           value: containerName
         }
         {
-          name: 'EventHub:NameSpace'
+          name: 'EventHub:QualifiedNameSpace'
           value: '${eventHubNamespaceName}.servicebus.windows.net'
         }
         {
@@ -172,7 +172,7 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
           value: eventHubName
         }
         {
-          name: 'ServiceBus:NameSpace'
+          name: 'ServiceBus:QualifiedNameSpace'
           value: '${serviceBusNamespaceName}.servicebus.windows.net'
         }
         {
