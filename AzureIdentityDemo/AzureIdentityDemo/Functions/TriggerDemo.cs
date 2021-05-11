@@ -36,7 +36,7 @@ namespace AzureIdentityDemo.Functions
         }
 
         [FunctionName("EventHubTrigger")]
-        public async Task EventHubTrigger([EventHubTrigger("%EventHub:Name%", Connection = "EventHub:Address")] EventData[] events, ILogger log)
+        public async Task EventHubTrigger([EventHubTrigger("%EventHub:Name%", Connection = "EventHub:NameSpace")] EventData[] events, ILogger log)
         {
             foreach (var eventdata in events)
             {
@@ -46,7 +46,7 @@ namespace AzureIdentityDemo.Functions
         }
 
         //[FunctionName("ServiceBusTrigger")]
-        //public async Task ServiceBusTrigger([ServiceBusTrigger("%ServiceBus:Name%", Connection = "ServiceBus:Address")] EventData[] events, ILogger log)
+        //public async Task ServiceBusTrigger([ServiceBusTrigger("%ServiceBus:Name%", Connection = "ServiceBus:NameSpace")] EventData[] events, ILogger log)
         //{
         //    _cosmosClient.GetContainer()
 
