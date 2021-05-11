@@ -20,8 +20,8 @@ namespace AzureIdentityDemo.Functions
         CosmosClient _cosmosClient = null;
         public TriggerDemo(IConfiguration configuration)
         {
-            _eventHubClient = new EventHubProducerClient(configuration["EventHub:NameSpace"], configuration["EventHub:Name"], new DefaultAzureCredential());
-            _serviceBusClient = new ServiceBusClient(configuration["ServiceBus:NameSpace"], new DefaultAzureCredential());
+            _eventHubClient = new EventHubProducerClient(configuration["EventHub:QualifiedNameSpace"], configuration["EventHub:Name"], new DefaultAzureCredential());
+            _serviceBusClient = new ServiceBusClient(configuration["ServiceBus:QualifiedNameSpace"], new DefaultAzureCredential());
             _serviceBusSender = _serviceBusClient.CreateSender(configuration["ServiceBus:Name"]);
             _cosmosClient = new CosmosClient(configuration["Cosmos:Address"], new DefaultAzureCredential());
         }

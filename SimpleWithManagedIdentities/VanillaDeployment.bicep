@@ -19,6 +19,8 @@ var storageQueueName = 'jobs'
 
 // All the various AD role id's we'll be using
 var storageaccountdatacontributorRoleId = '974c5e8b-45b9-4653-ba55-5f855dd0fb88'
+var eventHubDataOwnerRoleId = 'f526a384-b230-433a-b45c-95f59c4a2dec'
+var serviceBusDataOwnerRoleId = '090c5cfd-751d-490a-894a-3ce6f1109419'
 var readerRoleId = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
 var contributorRoleId = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
 
@@ -256,7 +258,7 @@ resource eventHubRole 'Microsoft.Authorization/roleAssignments@2020-04-01-previe
   properties: {
 
    // principalType: 'ServicePrincipal'
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', readerRoleId)
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', eventHubDataOwnerRoleId)
     principalId: website.identity.principalId
   }
 }
@@ -267,7 +269,7 @@ resource serviceBusRole 'Microsoft.Authorization/roleAssignments@2020-04-01-prev
   scope: serviceBusQueue
   properties: {
     principalType: 'ServicePrincipal'
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', contributorRoleId)
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', serviceBusDataOwnerRoleId)
     principalId: website.identity.principalId
   }
 }
