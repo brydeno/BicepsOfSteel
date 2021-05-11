@@ -158,6 +158,30 @@ resource website 'Microsoft.Web/sites@2020-06-01' = {
           value: containerName
         }
         {
+          name: 'EventHub:NameSpace'
+          value: '${eventHubNamespaceName}.servicebus.windows.net'
+        }
+        {
+          name: 'EventHub:NameSpace__fullyQualifiedNamespace'
+          value: '${eventHubNamespaceName}.servicebus.windows.net'
+        }
+        {
+          name: 'EventHub:Name'
+          value: eventHubName
+        }
+        {
+          name: 'ServiceBus:NameSpace'
+          value: '${serviceBusNamespaceName}.servicebus.windows.net'
+        }
+        {
+          name: 'ServiceBus:NameSpace__fullyQualifiedNamespace'
+          value: '${serviceBusNamespaceName}.servicebus.windows.net'
+        }
+        {
+          name: 'ServiceBus:Name'
+          value: serviceBusQueueName
+        }
+        {
           name: 'FeatureFlagAddress'
           value: featureFlagAddress
         }
