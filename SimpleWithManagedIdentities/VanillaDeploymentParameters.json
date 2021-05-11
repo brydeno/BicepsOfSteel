@@ -5,7 +5,7 @@
         "applicationName": {
             "value": "identitydemo-123654"
         },
-        "FeatureFlagAddress":{
+        "featureFlagAddress":{
             "value": "https://loadtestingfeatureflags.azconfig.io"
         }
    }

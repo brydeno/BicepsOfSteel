@@ -46,6 +46,23 @@ resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2020-04-01' = {
     disableKeyBasedMetadataWriteAccess: true
   }
 }
+resource database 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2021-03-15' = {
+  name: '${cosmos.name}/demo'
+  properties: {
+    resource: {
+      id: 'demo'
+    }
+  }
+}
+resource container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2021-03-15' = {
+  name: '${database.name}/democontainer'
+  properties:{
+    resource: {
+      id: 'democontainer'
+    }
+  }
+}
+ 
 
 resource farm 'Microsoft.Web/serverFarms@2020-06-01' = {
   name: hostingPlanName
